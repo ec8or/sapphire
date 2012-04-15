@@ -341,7 +341,7 @@ class SQLQuery {
 			}
 		}
 		else {
-			user_error('SQLQuery::orderby() incorrect format for $orderby', $clauses);
+			user_error('SQLQuery::orderby() incorrect format for $orderby', E_USER_WARNING);
 		}
 
 		// If sort contains a function call, let's move the sort clause into a 
