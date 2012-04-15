@@ -78,4 +78,10 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	 */
 	public function column($colName = "ID");
 
+	/**
+	 * Reverses the list. 
+	 *
+	 * @return array
+	 */
+	public function reverse();
 }
