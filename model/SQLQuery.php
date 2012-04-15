@@ -297,11 +297,12 @@ class SQLQuery {
 	 *
 	 * @param string|array $orderby
 	 * @param string $dir
-	 * @param bool $wipe wipe out existing order by clauses
+	 * @param bool $clear remove existing order by clauses
+	 *
 	 * @return SQLQuery
 	 */
-	public function orderby($clauses = null, $direction = null, $wipe = true) {
-		if($wipe) $this->orderby = array();
+	public function orderby($clauses = null, $direction = null, $clear = true) {
+		if($clear) $this->orderby = array();
 
 		if(!$clauses) {
 			return $this;

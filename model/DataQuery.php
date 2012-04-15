@@ -381,9 +381,9 @@ class DataQuery {
 	 *
 	 * @return DataQuery
 	 */
-	function sort($sort = null, $direction = null, $wipe = true) {
+	function sort($sort = null, $direction = null, $clear = true) {
 		$clone = $this;
-		$clone->query->orderby($sort, $direction, $wipe);
+		$clone->query->orderby($sort, $direction, $clear);
 			
 		return $clone;
 	}
