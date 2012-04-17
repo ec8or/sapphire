@@ -86,7 +86,7 @@ class SQLQuery {
 	 * Keep an internal register of find/replace pairs to execute when it's time to actually get the
 	 * query SQL.
 	 */
-	public $replacementsOld = array(), $replacementsNew = array();
+	private $replacementsOld = array(), $replacementsNew = array();
 	
 	/**
 	 * Construct a new SQLQuery.
@@ -139,16 +139,19 @@ class SQLQuery {
 	
 	/**
 	 * Add addition columns to the select clause
+	 *
+	 * @param array|string
 	 */
-    public function selectMore($fields) {
+	public function selectMore($fields) {
 		if(func_num_args() > 1) $fields = func_get_args();
 		
 		if(is_array($fields)) {
-			foreach($fields as $field) 
+			foreach($fields as $field) {
 				$this->select[] = $field;
+			}
 		} else {
 			$this->select[] = $fields;
-			}
+		}
 	}
 
 	/**
@@ -219,16 +222,16 @@ class SQLQuery {
 	 * Add an additional filter (part of the ON clause) on a join
 	 */
 	public function addFilterToJoin($tableAlias, $filter) {
-	    $this->from[$tableAlias]['filter'][] = $filter;
-    }
+		$this->from[$tableAlias]['filter'][] = $filter;
+	}
 
 	/**
 	 * Replace the existing filter (ON clause) on a join
 	 */
 	public function setJoinFilter($tableAlias, $filter) {
-	    if(is_string($this->from[$tableAlias])) {Debug::message($tableAlias); Debug::dump($this->from);}
-	    $this->from[$tableAlias]['filter'] = array($filter);
-    }
+		if(is_string($this->from[$tableAlias])) {Debug::message($tableAlias); Debug::dump($this->from);}
+		$this->from[$tableAlias]['filter'] = array($filter);
+	}
 	
 	/**
 	 * Returns true if we are already joining to the given table alias
@@ -242,8 +245,9 @@ class SQLQuery {
 	 */
 	public function queriedTables() {
 		$tables = array();
+		
 		foreach($this->from as $key => $tableClause) {
-		    if(is_array($tableClause)) $table = '"'.$tableClause['table'].'"';
+			if(is_array($tableClause)) $table = '"'.$tableClause['table'].'"';
 			else if(is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause, $matches)) $table = $matches[1];
 			else $table = $tableClause;
 
@@ -252,11 +256,9 @@ class SQLQuery {
 			
 			$tables[] = preg_replace('/^"|"$/','',$table);
 		}
-		return $tables;
 		
+		return $tables;	
 	}
-	
-	
 
 	/**
 	 * Pass LIMIT clause either as SQL snippet or in array format.
@@ -367,6 +369,7 @@ class SQLQuery {
 				}
 			}
 		}
+		
 		return $this;
 	}
 	
@@ -540,16 +543,16 @@ class SQLQuery {
 	 *
 	 * @return string
 	 */
-	function prepareSelect() {
+	public function prepareSelect() {
 		return ($this->where) ? implode(") {$this->connective} (" , $this->where) : '';
 	}
 	
 	/**
-	 * Return a SQL ORDER BY clause 
+	 * Returns the ORDER BY columns ready for inserting into a query
 	 *
 	 * @return string
 	 */
-	function prepareOrderBy() {
+	public function prepareOrderBy() {
 		$statments = array();
 			
 		if($order = $this->getOrderBy()) {			
@@ -562,20 +565,20 @@ class SQLQuery {
 	}
 	
 	/**
-	 * Return a SQL GROUP BY clause
+	 * Returns the GROUP by columns ready for inserting into a query.
 	 *
 	 * @return string
 	 */
-	function prepareGroupBy() {
+	public function prepareGroupBy() {
 		return implode(", ", $this->groupby);
 	}
 	
 	/**
-	 * Return a SQL HAVING clause
+	 * Returns the HAVING columns ready for inserting into a query.
 	 *
 	 * @return string
 	 */
-	function prepareHaving() {
+	public function prepareHaving() {
 		return  implode(" ) AND ( ", $sqlQuery->having);
 	}
 	
